@@ -46,6 +46,8 @@ nice		= 0
 
 [mysqld]
 user		= rof
+early-plugin-load = keyring_file.so
+keyring_file_data = /var/lib/mysql-keyring/keyring
 pid-file	= ${MYSQL_DIR}/mysqld.pid
 socket		= ${MYSQL_DIR}/socket/mysqld.sock
 port		= ${MYSQL_PORT}
