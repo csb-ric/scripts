@@ -10,10 +10,9 @@
 # * MYSQL_VERSION
 # * MYSQL_PORT
 #
-echo "!!! 1111"
 MYSQL_VERSION=${MYSQL_VERSION:="5.7.17"}
 MYSQL_PORT=${MYSQL_PORT:="3307"}
-echo "!!! 2222"
+
 # If the MySQL version is 5.7.18 or less
 if [ ${MYSQL_VERSION:4:2} -le 18 ]
 then
@@ -21,23 +20,19 @@ then
 else
   MYSQL_DL_URL="https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-${MYSQL_VERSION}-linux-glibc2.12-x86_64.tar.gz"
 fi
-echo "!!! 3333"
+
 set -e
 MYSQL_DIR=${MYSQL_DIR:=$HOME/mysql-$MYSQL_VERSION}
 CACHED_DOWNLOAD="${HOME}/cache/mysql-${MYSQL_VERSION}.tar.gz"
-echo "!!! 4444"
+
 mkdir -p "${MYSQL_DIR}"
-echo "!!! 5555"
 wget --continue --output-document "${CACHED_DOWNLOAD}" "${MYSQL_DL_URL}"
-echo "!!! 6666"
 tar -xaf "${CACHED_DOWNLOAD}" --strip-components=1 --directory "${MYSQL_DIR}"
-echo "!!! 7777"
 mkdir -p "${MYSQL_DIR}/data"
 mkdir -p "${MYSQL_DIR}/socket"
 mkdir -p "${MYSQL_DIR}/log"
 # 2019-08-01
 mkdir -p "${MYSQL_DIR}/mysql-keyring"
-echo "!!! 8888"
 echo "#
 # The MySQL 5.7 database server configuration file.
 #
@@ -91,16 +86,13 @@ max_allowed_packet	= 16M
 [isamchk]
 key_buffer		= 16M
 " > "${MYSQL_DIR}/my.cnf"
-echo "!!! 9999"
-"${MYSQL_DIR}/bin/mysqld" --defaults-file="${MYSQL_DIR}/my.cnf" --initialize-insecure --log-error=stderr
-echo "!!! 101010"
+
+"${MYSQL_DIR}/bin/mysqld" --defaults-file="${MYSQL_DIR}/my.cnf" --initialize-insecure
 (
   cd "${MYSQL_DIR}" || exit 1
   ./bin/mysqld_safe --defaults-file="${MYSQL_DIR}/my.cnf" &
   sleep 10
 )
-echo "!!! 121212"
+
 "${MYSQL_DIR}/bin/mysql" --defaults-file="${MYSQL_DIR}/my.cnf" -u "${MYSQL_USER}" -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';"
-echo "!!! 131313"
 "${MYSQL_DIR}/bin/mysql" --defaults-file="${MYSQL_DIR}/my.cnf" --version | grep "${MYSQL_VERSION}"
-echo "!!! 141414"
