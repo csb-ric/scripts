@@ -92,7 +92,7 @@ max_allowed_packet	= 16M
 key_buffer		= 16M
 " > "${MYSQL_DIR}/my.cnf"
 echo "!!! 9999"
-"${MYSQL_DIR}/bin/mysqld" --defaults-file="${MYSQL_DIR}/my.cnf" --initialize-insecure 2 > &1
+"${MYSQL_DIR}/bin/mysqld" --defaults-file="${MYSQL_DIR}/my.cnf" --initialize-insecure 2>&1
 echo "!!! 101010"
 (
   cd "${MYSQL_DIR}" || exit 1
