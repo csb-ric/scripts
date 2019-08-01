@@ -87,6 +87,8 @@ max_allowed_packet	= 16M
 key_buffer		= 16M
 " > "${MYSQL_DIR}/my.cnf"
 
+echo "CONFIG file: ", "${MYSQL_DIR}/my.cnf"
+
 "${MYSQL_DIR}/bin/mysqld" --defaults-file="${MYSQL_DIR}/my.cnf" --initialize-insecure
 (
   cd "${MYSQL_DIR}" || exit 1
