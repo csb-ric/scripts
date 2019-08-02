@@ -15,6 +15,8 @@ MYSQL_PORT=${MYSQL_PORT:="3307"}
 
 echo "MYSQL_VERSION=", $MYSQL_VERSION
 echo "MYSQL_PORT=", $MYSQL_PORT
+echo "Check for currently running MySQL:"
+echo "ps -ef| grep mysqld"
 
 # If the MySQL version is 5.7.18 or less
 if [ ${MYSQL_VERSION:4:2} -le 18 ]
@@ -39,7 +41,7 @@ mkdir -p "${MYSQL_DIR}/data"
 mkdir -p "${MYSQL_DIR}/socket"
 mkdir -p "${MYSQL_DIR}/log"
 # 2019-08-01
-mkdir -p "${MYSQL_DIR}/mysql-keyring"
+#mkdir -p "${MYSQL_DIR}/mysql-keyring"
 echo "#
 # The MySQL 5.7 database server configuration file.
 #
@@ -53,11 +55,10 @@ socket		= ${MYSQL_DIR}/socket/mysqld.sock
 nice		= 0
 
 [mysqld]
-user		= rof
+user		= mysql
 # 2019-08-01
 early-plugin-load = keyring_file.so
-#keyring_file_data = /var/lib/mysql-keyring/keyring
-keyring_file_data = ${MYSQL_DIR}/mysql-keyring/keyring
+keyring_file_data = /var/lib/mysql-keyring/keyring
 ##################################################
 pid-file	= ${MYSQL_DIR}/mysqld.pid
 socket		= ${MYSQL_DIR}/socket/mysqld.sock
@@ -94,7 +95,7 @@ max_allowed_packet	= 16M
 key_buffer		= 16M
 " > "${MYSQL_DIR}/my.cnf"
 
-echo "CONFIG file: ", "${MYSQL_DIR}/my.cnf"
+echo "CONFIG file path: ", "${MYSQL_DIR}/my.cnf"
 
 "${MYSQL_DIR}/bin/mysqld" --defaults-file="${MYSQL_DIR}/my.cnf" --initialize-insecure
 (
